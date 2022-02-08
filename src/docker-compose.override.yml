@@ -30,7 +30,7 @@ services:
         container_name: discountdb
         environment:
             - POSTGRES_USER=admin
-            - POSTGRES_PASSWORD=adming1234
+            - POSTGRES_PASSWORD=admin123!
             - POSTGRES_DB=DiscountDb
         restart: 
             always

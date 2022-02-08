@@ -15,7 +15,7 @@ services:
         image: postgres
 
     pgadmin:
-        image: dpage/admin4
+        image: dpage/pgadmin4
 
     catalog.api:
         image: ${DOCKER_REGISTRY-}catalogapi
