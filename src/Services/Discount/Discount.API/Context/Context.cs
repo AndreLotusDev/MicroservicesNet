@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Npgsql;
 using System.Data;
-using System.Data.Common;
 
 namespace Discount.API.Context
 {

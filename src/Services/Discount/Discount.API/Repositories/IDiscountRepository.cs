@@ -1,6 +1,5 @@
 ﻿using Discount.API.Entities;
 using Discount.API.Helper;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
