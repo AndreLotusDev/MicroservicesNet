@@ -64,8 +64,11 @@ services:
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
             - CacheSettings__RedisConnection=basketdbcache:6379
+            - GrpcSettings__DiscountUrl=http://discount.grpc
+
         depends_on:
             - basketdbcache
+            - discount.grpc
         ports:
             - "7000:80"
 
@@ -79,3 +82,16 @@ services:
         ports:
             - "6010:80"
 
+    discount.grpc:
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - ASPNETCORE_URLS=https://+:443;http://+:80
+            - DatabaseSettings__ConnectionPostgres=Server=discountdb; Database=DiscountDb; User Id=admin; Password=admin123!
+        depends_on:
+            - discountdb
+        ports:
+            - "5000"
+            - "5001"
+        volumes:
+            - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+            - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

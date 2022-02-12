@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
 using Discount.GRPC.Entities;
 using Discount.GRPC.Protos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Discount.GRPC.Mapper
 {
@@ -12,7 +8,7 @@ namespace Discount.GRPC.Mapper
     {
         public DiscountProfile()
         {
-            CreateMap<Coupon, CouponModel>().ReverseMap();
+            CreateMap<Coupon, CouponModel>().ForMember(p => p.Amount, opt => opt.MapFrom(x => x.ValueDiscount)).ReverseMap();
         }
     }
 }

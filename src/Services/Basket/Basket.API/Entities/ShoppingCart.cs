@@ -8,6 +8,8 @@ namespace Basket.API.Entities
         public string UserName { get; set; }
         public List<ShoppingCartItem> Items { get; set; } = new List<ShoppingCartItem>();
         public decimal TotalPrice => Items.Sum(s => s.Price * s.Quantity);
+        public decimal TotalPriceDiscount { get; set; }
+        public string CouponCode { get; set; }
 
         public ShoppingCart()
         {

@@ -45,7 +45,7 @@ namespace Discount.GRPC.Entities
                 throw new Exception("The description should not be empty!");
         }
 
-        public string Description { get; set; }
+        public string Description { get; set; } = "";
 
         public decimal ValueDiscount { get; set; }
 
