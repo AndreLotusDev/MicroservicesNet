@@ -1,6 +1,7 @@
 using Basket.API.GrpcServices;
 using Basket.API.Repositories;
 using Discount.GRPC.Protos;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,23 +24,48 @@ namespace Basket.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddStackExchangeRedisCache(options => {
+            AddDefaultServices(services);
+            AddCustomServices(services);
+        }
+
+        private void AddCustomServices(IServiceCollection services)
+        {
+            //GrpcConfiguration
+            var grpcCuponCodeAddress = Configuration["GrpcSettings:DiscountUrl"];
+            services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(options => options.Address = new Uri(grpcCuponCodeAddress));
+            services.AddScoped<DiscountGrpcService>();
+
+            services.AddScoped<IBasketRepository, BasketRepository>();
+
+            //REDIS IN CACHE configuration
+            services.AddStackExchangeRedisCache(options =>
+            {
 
                 options.Configuration = Configuration.GetValue<string>("CacheSettings:RedisConnection");
 
             });
 
-            services.AddScoped<IBasketRepository, BasketRepository>();
+            //RabbitMQ configuration
+            services.AddMassTransit(config =>
+            {
+                config.UsingRabbitMq((ctx, cfg) => 
+                {
+                    cfg.Host("amqp://guest:guest@localhost:5672");
+                });
+            });
 
+            //AutoMapper
+            //Assembly of startup
+            services.AddAutoMapper(typeof(Startup));
+        }
+
+        private static void AddDefaultServices(IServiceCollection services)
+        {
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Basket.API", Version = "v1" });
             });
-
-            var grpcCuponCodeAddress = Configuration["GrpcSettings:DiscountUrl"];
-            services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(options => options.Address = new Uri(grpcCuponCodeAddress));
-            services.AddScoped<DiscountGrpcService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
