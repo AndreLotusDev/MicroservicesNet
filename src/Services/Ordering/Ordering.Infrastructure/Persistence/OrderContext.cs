@@ -19,9 +19,10 @@ namespace Ordering.Infrastructure.Persistence
 
         public DbSet<Order> Orders { get; set;}
 
-        public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            foreach (var entry in ChangeTracker.Entries<EntityBase>())
+            var modifiedEntities = ChangeTracker.Entries<EntityBase>();
+            foreach (var entry in modifiedEntities)
             {
                 switch (entry.State)
                 {
@@ -36,7 +37,7 @@ namespace Ordering.Infrastructure.Persistence
                 }
             }
 
-            return await base.SaveChangesAsync(cancellationToken);
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }
