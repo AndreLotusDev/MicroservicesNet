@@ -50,9 +50,10 @@ namespace Basket.API
             {
                 config.UsingRabbitMq((ctx, cfg) => 
                 {
-                    cfg.Host("amqp://guest:guest@localhost:5672");
+                    cfg.Host(Configuration["EventBusSettings:HostAddress"]);
                 });
             });
+            services.AddMassTransitHostedService();
 
             //AutoMapper
             //Assembly of startup
