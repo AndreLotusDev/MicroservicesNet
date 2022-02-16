@@ -15,3 +15,5 @@
 <br/>
 -GRPC to get information internal between services.
 <br/>
+<br/>
+- This project uses docker + dockerfile for scalability
